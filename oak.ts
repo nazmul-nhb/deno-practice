@@ -1,18 +1,23 @@
-import { Application, Router } from "https://deno.land/x/oak@v17.0.0/mod.ts";
+import {
+    Application,
+    Context,
+    Next,
+    Router,
+} from "https://deno.land/x/oak@v17.0.0/mod.ts";
 
 const app = new Application();
 const router = new Router();
 const port = 4242;
 
 // Logger Middleware
-app.use(async (ctx, next) => {
+app.use(async (ctx: Context, next: Next) => {
     await next();
     const rt = ctx.response.headers.get("X-Response-Time");
     console.log(`${ctx.request.method} ${ctx.request.url.pathname} - ${rt}`);
 });
 
 // Timing Middleware - Adding response time in headers and body
-app.use(async (ctx, next) => {
+app.use(async (ctx: Context, next: Next) => {
     const start = Date.now();
     await next();
     const ms = Date.now() - start;
@@ -32,12 +37,41 @@ app.use(async (ctx, next) => {
 
 // Routes
 router
-    .get("/", (ctx) => {
+    .get("/", (ctx: Context) => {
         ctx.response.body = { success: true, message: "Hello Deno!" };
     })
-    .get("/response", (ctx) => {
-        ctx.response.body = { success: true, message: "Response Endpoint to Test!" };
+    .get("/response", (ctx: Context) => {
+        ctx.response.body = {
+            success: true,
+            message: "Response Endpoint to Test!",
+        };
     });
+
+// Middleware to handle 404 Not Found
+app.use(async (ctx: Context, next: Next) => {
+    await next();
+    if (ctx.response.status === 404 || ctx.response.body === undefined) {
+        ctx.response.status = 404;
+        ctx.response.body = {
+            success: false,
+            message: "Requested URL Not Found!",
+        };
+    }
+});
+
+// General error-handling middleware
+app.use(async (ctx: Context, next: Next) => {
+    try {
+        await next();
+    } catch (err) {
+        console.error(err.message);
+        ctx.response.status = err.status || 500;
+        ctx.response.body = {
+            success: false,
+            message: err.message || "Internal Server Error",
+        };
+    }
+});
 
 // Use the router
 app.use(router.routes());
