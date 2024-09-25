@@ -5,7 +5,7 @@ interface Person {
 
 const greet = (person: Person): string => {
 	return "Hello, " + person.name + "!";
-}
+};
 
 const alice: Person = {
 	name: "Alice",
