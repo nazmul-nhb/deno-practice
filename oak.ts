@@ -36,7 +36,7 @@ router
         ctx.response.body = { success: true, message: "Hello Deno!" };
     })
     .get("/response", (ctx) => {
-        ctx.response.body = { success: true, message: "Response Endpoint!" };
+        ctx.response.body = { success: true, message: "Response Endpoint to Test!" };
     });
 
 // Use the router
