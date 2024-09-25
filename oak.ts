@@ -43,6 +43,6 @@ router
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-console.log(`OAK Server is Running on http://localhost:${port}`);
+console.log(`Server is Running on http://localhost:${port}`);
 
 await app.listen({ port });
