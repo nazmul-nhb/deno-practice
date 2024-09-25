@@ -1,10 +1,10 @@
-import express, { Request, Response } from "npm:express";
+import express, { Application, Request, Response } from "npm:express";
 
-const app = express();
+const app: Application = express();
 
 const port = 4242;
 
-app.get("/", function (_req: Request, res: Response) {
+app.get("/", (_req: Request, res: Response) => {
 	res.send({ success: true, message: "Hello Deno" });
 });
 
