@@ -8,7 +8,7 @@ const port = 4242;
 app.use(async (ctx, next) => {
     await next();
     const rt = ctx.response.headers.get("X-Response-Time");
-    console.log(`${ctx.request.method} ${ctx.request.url} - ${rt}`);
+    console.log(`${ctx.request.method} ${ctx.request.url.pathname} - ${rt}`);
 });
 
 // Timing Middleware - Adding response time in headers and body
