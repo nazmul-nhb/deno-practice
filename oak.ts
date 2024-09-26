@@ -64,12 +64,13 @@ app.use(async (ctx: Context, next: Next) => {
     try {
         await next();
     } catch (err) {
-        console.error(err.message);
-        ctx.response.status = err.status || 500;
-        ctx.response.body = {
-            success: false,
-            message: err.message || "Internal Server Error",
-        };
+        if (err instanceof Error) {
+            console.error(err.message);
+            ctx.response.body = {
+                success: false,
+                message: err.message || "Internal Server Error",
+            };
+        }
     }
 });
 
